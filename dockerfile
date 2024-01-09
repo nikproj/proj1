@@ -1,3 +1,3 @@
 FROM ubuntu/apache2
-RUN sudo apt-get update
+RUN apt-get update
 ADD . /var/www/html
