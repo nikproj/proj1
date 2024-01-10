@@ -1,0 +1,25 @@
+pipeline{
+    agent {
+        label 'kubemaster'
+    }
+    stages {
+        stage('build code') {
+            steps {
+                echo 'building..'
+                git url: 'https://github.com/Nikhil-tr/proj1.git'
+                 sh 'sudo docker build --file $WORKSPACE/dockerfile --tag docker.io/nikhiltr1/proj2:$BUILD_NUMBER /home/ubuntu'
+            }
+        }
+        stage('push to docker-hub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerhubpwd')]) { ##create the credentials
+                        sh 'docker login docker.io -u nikhiltr1 -p ${dockerhubpwd}'
+}
+                        sh 'docker push docker.io/nikhiltr1/proj2:$BUILD_NUMBER'
+                    
+                }
+            }
+        }
+    }
+}
